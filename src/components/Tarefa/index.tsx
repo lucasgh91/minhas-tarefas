@@ -1,16 +1,16 @@
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import * as S from './styles'
-import * as enums from '../../utils/enums/Tarefa'
+//import * as enums from '../../utils/enums/Tarefa'
+import { remover } from '../../store/reducers/tarefas'
+import TarefaClass from '../../models/Tarefa'
 
-type Props = {
-  titulo: string
-  $prioridade: enums.Prioridade
-  $status: enums.Status
-  descricao: string
-}
+type Props = TarefaClass
 
-const Tarefa = ({ titulo, $prioridade, $status, descricao }: Props) => {
+const Tarefa = ({ titulo, id, $prioridade, $status, descricao }: Props) => {
+  const dispatch = useDispatch()
   const [estaEditando, setEstaEditando] = useState(false)
+  const [descricaoText, setDescricaoText] = useState(descricao)
 
   return (
     <S.Card>
@@ -21,7 +21,10 @@ const Tarefa = ({ titulo, $prioridade, $status, descricao }: Props) => {
       <S.Tag $parametro="status" $status={$status}>
         {$status}
       </S.Tag>
-      <S.Descricao defaultValue={descricao || ''} readOnly />
+      <S.Descricao
+        value={descricaoText || ''}
+        onChange={(e) => setDescricaoText(e.target.value)}
+      />
       <S.BarraAcoes>
         {estaEditando ? (
           <>
@@ -33,7 +36,9 @@ const Tarefa = ({ titulo, $prioridade, $status, descricao }: Props) => {
         ) : (
           <>
             <S.Botao onClick={() => setEstaEditando(true)}>Editar</S.Botao>
-            <S.BotaoCancelarRemover>Remover</S.BotaoCancelarRemover>
+            <S.BotaoCancelarRemover onClick={() => dispatch(remover(id))}>
+              Remover
+            </S.BotaoCancelarRemover>
           </>
         )}
       </S.BarraAcoes>
