@@ -7,7 +7,7 @@ const BarraLateral = () => {
       <div>
         <S.Campo type="text" placeholder="Buscar" />
         <S.Filtros>
-          <FiltroCard ativo contador={0} legenda={'pendentes'} />
+          <FiltroCard $ativo={true} contador={0} legenda={'pendentes'} />
           <FiltroCard contador={0} legenda={'concluídas'} />
           <FiltroCard contador={0} legenda={'urgentes'} />
           <FiltroCard contador={0} legenda={'importantes'} />
