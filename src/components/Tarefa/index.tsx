@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import * as S from './styles'
 //import * as enums from '../../utils/enums/Tarefa'
-import { remover } from '../../store/reducers/tarefas'
+import { remover, editar } from '../../store/reducers/tarefas'
 import TarefaClass from '../../models/Tarefa'
 
 type Props = TarefaClass
@@ -10,7 +10,16 @@ type Props = TarefaClass
 const Tarefa = ({ titulo, id, $prioridade, $status, descricao }: Props) => {
   const dispatch = useDispatch()
   const [estaEditando, setEstaEditando] = useState(false)
-  const [descricaoText, setDescricaoText] = useState(descricao)
+  const [descricaoText, setDescricaoText] = useState('')
+
+  useEffect(() => {
+    if (descricao.length >= 0) setDescricaoText(descricao)
+  }, [descricao])
+
+  function cancelarEdicao() {
+    setEstaEditando(false)
+    setDescricaoText(descricao)
+  }
 
   return (
     <S.Card>
@@ -22,14 +31,31 @@ const Tarefa = ({ titulo, id, $prioridade, $status, descricao }: Props) => {
         {$status}
       </S.Tag>
       <S.Descricao
+        disabled={!estaEditando}
         value={descricaoText || ''}
         onChange={(e) => setDescricaoText(e.target.value)}
       />
       <S.BarraAcoes>
         {estaEditando ? (
           <>
-            <S.BotaoSalvar>Salvar</S.BotaoSalvar>
-            <S.BotaoCancelarRemover onClick={() => setEstaEditando(false)}>
+            <S.BotaoSalvar
+              onClick={() => {
+                console.log(descricao)
+                dispatch(
+                  editar({
+                    id: id,
+                    titulo: titulo,
+                    $prioridade: $prioridade,
+                    $status: $status,
+                    descricao: descricaoText
+                  })
+                )
+                setEstaEditando(false)
+              }}
+            >
+              Salvar
+            </S.BotaoSalvar>
+            <S.BotaoCancelarRemover onClick={() => cancelarEdicao()}>
               Cancelar
             </S.BotaoCancelarRemover>
           </>
