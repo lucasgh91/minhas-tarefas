@@ -17,6 +17,7 @@ const BarraLateral = () => {
           onChange={(e) => dispatch(alteraTermo(e.target.value))}
           type="text"
           placeholder="Buscar"
+          id="termo"
         />
         <S.Filtros>
           <FiltroCard

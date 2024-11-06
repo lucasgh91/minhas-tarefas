@@ -34,6 +34,7 @@ const Tarefa = ({ titulo, id, $prioridade, $status, descricao }: Props) => {
         disabled={!estaEditando}
         value={descricaoText || ''}
         onChange={(e) => setDescricaoText(e.target.value)}
+        name="descricao"
       />
       <S.BarraAcoes>
         {estaEditando ? (

@@ -11,7 +11,8 @@ export type Props = {
 }
 
 const FiltroCard = ({ legenda, criterio, valor }: Props) => {
-  const { filtro, tarefas } = useSelector((state: RootReducer) => state)
+  const filtro = useSelector((state: RootReducer) => state.filtro)
+  const tarefas = useSelector((state: RootReducer) => state.tarefas)
   const dispatch = useDispatch()
 
   const contarTarefas = () => {
