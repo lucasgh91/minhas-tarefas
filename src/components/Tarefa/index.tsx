@@ -40,7 +40,6 @@ const Tarefa = ({ titulo, id, $prioridade, $status, descricao }: Props) => {
           <>
             <S.BotaoSalvar
               onClick={() => {
-                console.log(descricao)
                 dispatch(
                   editar({
                     id: id,
