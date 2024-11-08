@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react'
+import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import * as S from './styles'
-import { remover, editar } from '../../store/reducers/tarefas'
+import { remover, editar, alteraStatus } from '../../store/reducers/tarefas'
 import TarefaClass from '../../models/Tarefa'
-import { BotaoSalvar } from '../../styles'
+import { Botao, BotaoSalvar } from '../../styles'
+import * as enums from '../../utils/enums/Tarefa'
 
 type Props = TarefaClass
 
@@ -11,6 +12,7 @@ const Tarefa = ({ titulo, id, $prioridade, $status, descricao }: Props) => {
   const dispatch = useDispatch()
   const [estaEditando, setEstaEditando] = useState(false)
   const [descricaoText, setDescricaoText] = useState('')
+  const textAreaRef = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
     if (descricao.length >= 0) setDescricaoText(descricao)
@@ -21,9 +23,31 @@ const Tarefa = ({ titulo, id, $prioridade, $status, descricao }: Props) => {
     setDescricaoText(descricao)
   }
 
+  function alteraStatusTarefa(e: ChangeEvent<HTMLInputElement>) {
+    dispatch(alteraStatus({ id: id, finalizado: e.target.checked }))
+  }
+
+  useEffect(() => {
+    if (estaEditando && textAreaRef.current) {
+      textAreaRef.current.focus()
+    }
+  }, [estaEditando])
+
   return (
     <S.Card>
-      <S.Titulo>{titulo}</S.Titulo>
+      <label htmlFor={titulo}>
+        <input
+          type="checkbox"
+          checked={$status === enums.Status.CONCLUIDA}
+          disabled={$status === enums.Status.CONCLUIDA}
+          id={titulo}
+          onChange={alteraStatusTarefa}
+        />
+        <S.Titulo>
+          {estaEditando === true && <em>Editando: </em>}
+          {titulo}
+        </S.Titulo>
+      </label>
       <S.Tag $parametro="prioridade" $prioridade={$prioridade}>
         {$prioridade}
       </S.Tag>
@@ -31,6 +55,7 @@ const Tarefa = ({ titulo, id, $prioridade, $status, descricao }: Props) => {
         {$status}
       </S.Tag>
       <S.Descricao
+        ref={textAreaRef}
         disabled={!estaEditando}
         value={descricaoText || ''}
         onChange={(e) => setDescricaoText(e.target.value)}
@@ -61,7 +86,12 @@ const Tarefa = ({ titulo, id, $prioridade, $status, descricao }: Props) => {
           </>
         ) : (
           <>
-            <S.Botao onClick={() => setEstaEditando(true)}>Editar</S.Botao>
+            <Botao
+              disabled={$status === enums.Status.CONCLUIDA}
+              onClick={() => setEstaEditando(true)}
+            >
+              Editar
+            </Botao>
             <S.BotaoCancelarRemover onClick={() => dispatch(remover(id))}>
               Remover
             </S.BotaoCancelarRemover>

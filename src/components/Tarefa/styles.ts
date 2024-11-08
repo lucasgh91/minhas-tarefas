@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import variaveis from '../../styles/variaveis'
-
+import { Botao } from '../../styles'
 import * as enums from '../../utils/enums/Tarefa'
 
 type TagProps = {
@@ -29,12 +29,76 @@ export const Card = styled.div`
   padding: 16px;
   margin: 32px 0 32px 0;
   border-radius: 16px;
+
+  label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+
+    input[type='checkbox'] {
+      position: relative;
+      appearance: none;
+      width: 30px;
+      height: 30px;
+      background-color: ${variaveis.amarelo};
+      overflow: hidden;
+      transition: all 1s;
+      border: 3px solid ${variaveis.amarelo2};
+      opacity: 0.5;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 1;
+      }
+
+      &:checked {
+        background-color: ${variaveis.verde};
+        border: 3px solid #359326;
+      }
+
+      &::after {
+        text-align: center;
+        font-size: 22px;
+        position: absolute;
+        color: #fff;
+        content: 'C';
+        font-weight: bold;
+        left: -150%;
+        top: 0%;
+        width: 100%;
+        height: 100%;
+        transition: all 0.5s;
+      }
+
+      &::before {
+        text-align: center;
+        font-size: 22px;
+        position: absolute;
+        color: #fff;
+        content: 'P';
+        font-weight: bold;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        transition: all 0.5s;
+      }
+
+      &:checked::before {
+        left: -150%;
+      }
+
+      &:checked::after {
+        left: 0;
+      }
+    }
+  }
 `
 
 export const Titulo = styled.h3`
   font-size: 18px;
   font-weight: bold;
-  margin-bottom: 16px;
+  margin-left: 8px;
 `
 
 export const Tag = styled.span<TagProps>`
@@ -66,18 +130,6 @@ export const Descricao = styled.textarea`
 export const BarraAcoes = styled.div`
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   padding-top: 16px;
-`
-
-export const Botao = styled.button`
-  font-weight: bold;
-  font-size: 12px;
-  color: #fff;
-  margin-right: 8px;
-  padding: 8px 12px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  background-color: #2f3640;
 `
 
 export const BotaoCancelarRemover = styled(Botao)`
